@@ -2,7 +2,7 @@ import requests
 from .students import Students
 from .constants import UNAUTHORIZED_MSG
 from .grades import Grades
-
+from .subjects import Subjects
 
 
 
@@ -16,7 +16,7 @@ class EduTatarAPI:
             'marks': None,
             'homeworks': None,
             'grades': Grades,
-            'subjects': None
+            'subjects': Subjects
         }
 
     def __authenticate(self):

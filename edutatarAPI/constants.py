@@ -5,3 +5,4 @@ UNAUTHORIZED_MSG = 'Не удалось войти в аккаунт. ' \
                    'Убедитесь, что вы верно ввели логин/пароль и двухфакторная аутентификация отключена.'
 
 GRADES_PAGE_URL = 'https://edu.tatar.ru/school/academic_year/classes'
+SUBJECTS_PAGE_URL = 'https://edu.tatar.ru/school/subject/index'
