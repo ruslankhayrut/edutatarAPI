@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+
 
 class TableParser:
     """
@@ -16,7 +16,7 @@ class TableParser:
         header_row = self.html.find('thead').find_all('tr')[-1].find_all('td')
         body_rows = self.html.find('tbody').find_all('tr')
 
-        self.__data['header'] = [cell.text for cell in header_row]
+        self.__data['header'] = [cell.text.strip().replace('\n', ' ') for cell in header_row]
         body = []
         for row in body_rows:
             cells = row.find_all('td')

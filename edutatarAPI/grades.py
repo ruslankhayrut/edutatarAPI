@@ -1,8 +1,7 @@
-
 from .abc import AbstractModel, AbstractParser
 from .constants import GRADES_PAGE_URL
 from .base_parsers import TableParser
-import json
+
 
 class Grades(AbstractModel):
     def get(self, params):
@@ -42,10 +41,4 @@ class _GradesParser(AbstractParser):
                         value = int(value)
                     d.update({dict_key: value})
             items.append(d)
-
-        res = {
-            'keys': list(self.header_to_key.values()),
-            'data': items
-        }
-
-        return res
+        return items
