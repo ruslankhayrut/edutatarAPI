@@ -14,11 +14,12 @@ class AbstractModel(ABC):
 
 
 class AbstractParser(ABC):
-    def __init__(self, session):
+    def __init__(self, session, page_url=''):
         self.session = session
+        self.page_url = page_url
 
-    def get_page_html(self, page_url, **kwargs):
-        r = self.session.get(page_url, params=kwargs)
+    def get_page_html(self, **kwargs):
+        r = self.session.get(self.page_url, params=kwargs)
         html = BeautifulSoup(r.text, 'html.parser')
         return html
 

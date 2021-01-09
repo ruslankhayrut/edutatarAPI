@@ -10,11 +10,10 @@ class Subjects(AbstractModel):
 
 class _SubjectsParser(AbstractParser):
     def __init__(self, session):
-        super(_SubjectsParser, self).__init__(session)
-        self.page_url = SUBJECTS_PAGE_URL
+        super(_SubjectsParser, self).__init__(session, page_url=SUBJECTS_PAGE_URL)
 
     def __find_checked_items(self):
-        html = self.get_page_html(self.page_url)
+        html = self.get_page_html()
         form = html.find('form', {'action': "/school/subject/index"})
         checked_subjs = form.find_all('input', {'checked': 'checked'})
         return checked_subjs

@@ -11,8 +11,7 @@ class Grades(AbstractModel):
 
 class _GradesParser(AbstractParser):
     def __init__(self, session):
-        super(_GradesParser, self).__init__(session)
-        self.page_url = GRADES_PAGE_URL
+        super(_GradesParser, self).__init__(session, page_url=GRADES_PAGE_URL)
         self.header_to_key = {
             'Номер класса': 'grade_number',
             'Литера': 'litera',
@@ -20,25 +19,13 @@ class _GradesParser(AbstractParser):
         }
 
     def __find_grades_table(self):
-        html = self.get_page_html(self.page_url)
+        html = self.get_page_html()
         table = html.find('table', {'class': 'table', 'id': 'dataTable'})
         return table
 
     @property
     def json(self):
         grades_table = self.__find_grades_table()
-        structured_table = TableParser(grades_table).parse()
-        header = structured_table['header']
-        body = structured_table['body']
-
-        items = []
-        for item in body:
-            d = {}
-            for header_key, value in zip(header, item):
-                dict_key = self.header_to_key.get(header_key)
-                if dict_key:
-                    if value.isdigit():
-                        value = int(value)
-                    d.update({dict_key: value})
-            items.append(d)
-        return items
+        parsed_table = TableParser(grades_table).parse()
+        res = parsed_table.jsonify(self.header_to_key)
+        return res
