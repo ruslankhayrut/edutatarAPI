@@ -19,9 +19,24 @@ class AbstractParser(ABC):
         self.page_url = page_url
 
     def get_page_html(self, **kwargs):
-        r = self.session.get(self.page_url, params=kwargs)
+        url = 'https://edu.tatar.ru' + self.page_url
+
+        r = self.session.get(url, params=kwargs)
         html = BeautifulSoup(r.text, 'html.parser')
         return html
+
+    def build_query_string(self, **kwargs):
+        base_url = self.page_url
+        pairs = []
+        for key, val in kwargs.items():
+            pair = f'{key}={val}'
+            pairs.append(pair)
+
+        if not pairs:
+            return base_url
+
+        query_string = '&'.join(pairs)
+        return base_url + '?' + query_string
 
     @property
     def json(self):

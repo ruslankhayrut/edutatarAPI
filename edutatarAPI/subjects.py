@@ -14,7 +14,7 @@ class _SubjectsParser(AbstractParser):
 
     def __find_checked_items(self):
         html = self.get_page_html()
-        form = html.find('form', {'action': "/school/subject/index"})
+        form = html.find('form', {'action': self.page_url})
         checked_subjs = form.find_all('input', {'checked': 'checked'})
         return checked_subjs
 
