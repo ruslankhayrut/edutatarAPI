@@ -2,8 +2,8 @@ from marshmallow import Schema, fields, validates_schema, ValidationError
 
 
 class StudentsGet(Schema):
-    grade = fields.String()
-    name = fields.String()
+    grade = fields.String(missing=None)
+    name = fields.String(missing=None)
 
     @validates_schema
     def validate_not_empty(self, data, **kwargs):
