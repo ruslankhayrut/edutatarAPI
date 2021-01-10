@@ -38,6 +38,19 @@ class AbstractParser(ABC):
         query_string = '&'.join(pairs)
         return base_url + '?' + query_string
 
+    @staticmethod
+    def find_subject_ids_from_selector(html, subject_name):
+        subjects_selector = html.find('select', {'id': 'criteria'})
+        if not subjects_selector:
+            return []
+
+        options = subjects_selector.find_all('option')
+        subject_ids = []
+        for option in options:
+            if subject_name in option.text.replace(u'\xa0', ' '):
+                subject_ids.append(option.get('value'))
+        return subject_ids
+
     @property
     def json(self):
         raise NotImplementedError

@@ -9,6 +9,7 @@ UNAUTHORIZED_MSG = 'Не удалось войти в аккаунт. ' \
 GRADES_PAGE_URL = '/school/academic_year/classes'
 SUBJECTS_PAGE_URL = '/school/subject/index'
 STUDENTS_PAGE_URL = '/school/academic_year/pupils'
+MARKS_PAGE_URL = '/school/journal/school_editor'
 
 NUMBERS_RE = compile(r'\d+')
-NAMES_RE = compile(r'([ЁёА-я ]+){2}')
+NAMES_RE = compile(r'([А-ЯЁ][а-яё]+[\-\s]?){3,}')

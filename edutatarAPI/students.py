@@ -3,6 +3,7 @@ from .validators import StudentsGet
 from marshmallow import ValidationError
 from .constants import STUDENTS_PAGE_URL, NUMBERS_RE, NAMES_RE
 from .grades import Grades
+from .models import Student
 import re
 
 
@@ -14,37 +15,34 @@ class Students(AbstractModel):
             return {'message': err.messages, 'status': 400}
 
         grade = params['grade']
-        name = params['name']
-        res = _StudentsParser(self.session, grade, name).json
+        student = params['student']
+        res = _StudentsParser(self.session, grade, student).json
         return res
 
 
 class _StudentsParser(AbstractParser):
-    def __init__(self, session, grade, name):
+    def __init__(self, session, grade, student):
         super(_StudentsParser, self).__init__(session, page_url=STUDENTS_PAGE_URL)
         self.grade = grade
-        self.name = name
-        self.grades_list = Grades(self.session).get(params={})
+        self.student = student
 
     def __get_students_by_name(self):
         students = []
-        for grade in self.grades_list:
+        grades_list = Grades(self.session).get(params={})
+        for grade in grades_list:
             students += self.__get_students_by_grade(grade)
         return students
 
     def __get_students_by_grade(self, grade):
-        grade_id = grade['id']
-        grade_name = str(grade['number']) + grade['litera']
-
-        html = self.get_page_html(id=grade_id)
+        html = self.get_page_html(id=grade.id)
 
         matches = re.findall(r'addUser(.*)', str(html))
 
         students = []
         for match in matches:
-            if self.name:
-                if self.name in match:
-                    name = self.name
+            if self.student:
+                if self.student in match:
+                    name = self.student
                 else:
                     name = None
             else:
@@ -53,26 +51,26 @@ class _StudentsParser(AbstractParser):
 
             id = re.findall(NUMBERS_RE, match)
             if name and id:
-                students.append({
-                    'grade': grade_name,
-                    'name': name,
-                    'id': int(id[1])
-                })
+                student_obj = Student(
+                    id=int(id[1]),
+                    grade=grade.name,
+                    name=name
+                )
+                students.append(student_obj)
 
         return students
 
     @property
     def json(self):
-        if not self.grade and self.name:
+        if not self.grade and self.student:
             return self.__get_students_by_name()
 
         else:
-            self.grade = self.grade.upper()
-            grade = list(filter(lambda grade: str(grade['number']) + grade['litera'] == self.grade, self.grades_list))
-            if not grade:
+            required_grade = Grades(self.session).get(params={'grade': self.grade.upper()})
+            if not required_grade:
                 return []
 
-            grade = grade[0]
+            grade = required_grade[0]
             return self.__get_students_by_grade(grade)
 
 

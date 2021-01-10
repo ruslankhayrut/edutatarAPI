@@ -1,6 +1,6 @@
 from .abc import AbstractModel, AbstractParser
 from .constants import SUBJECTS_PAGE_URL
-
+from .models import Subject
 
 class Subjects(AbstractModel):
     def get(self, params):
@@ -23,4 +23,5 @@ class _SubjectsParser(AbstractParser):
         checked_items = self.__find_checked_items()
         labels = [item.parent.text for item in checked_items]
         labels.sort()
-        return labels
+        objects = [Subject(name=label) for label in labels]
+        return objects

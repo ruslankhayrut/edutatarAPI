@@ -3,7 +3,7 @@ from .students import Students
 from .constants import UNAUTHORIZED_MSG
 from .grades import Grades
 from .subjects import Subjects
-
+from .marks import Marks
 
 
 class EduTatarAPI:
@@ -13,7 +13,7 @@ class EduTatarAPI:
 
         self.resource_handlers = {
             'students': Students,
-            'marks': None,
+            'marks': Marks,
             'homeworks': None,
             'grades': Grades,
             'subjects': Subjects

@@ -28,7 +28,7 @@ class ParsedTable:
         self.header = header
         self.body = body
 
-    def jsonify(self, keys_mapping):
+    def create_objects(self, keys_mapping, object_type):
         items = []
         for row in self.body:
             d = {}
@@ -36,7 +36,7 @@ class ParsedTable:
                 dict_key = keys_mapping.get(header_key)
                 if dict_key:
                     d.update({dict_key: cell.value})
-            items.append(d)
+            items.append(object_type(**d))
         return items
 
 
@@ -71,3 +71,28 @@ class TableParser:
         parsed_table = ParsedTable(header, body)
         return parsed_table
 
+
+class ParsedMarksTable(ParsedTable):
+    def __init__(self, header, body):
+        super(ParsedMarksTable, self).__init__(header, body)
+        self.teacher = ''
+        self.term = 1
+
+
+class MarksTableParser:
+    """
+    Merges all pages into one table
+    """
+    def __init__(self, pages):
+        self.pages = pages
+
+    @staticmethod
+    def parse_page(html):
+        header_row = html.find('thead')
+        body_rows = html.find('tbody').find_all('tr')
+
+        return {'header': [], 'body': []}
+
+    def parse(self):
+        for html in self.pages:
+            page_data = self.parse_page(html)
