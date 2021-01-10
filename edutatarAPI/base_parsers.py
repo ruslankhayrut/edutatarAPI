@@ -1,4 +1,5 @@
 import re
+from .constants import NUMBERS_RE
 
 
 class TableCell:
@@ -16,7 +17,7 @@ class TableCell:
         if not self.links:
             return -1
 
-        matches = re.findall(r'\d+', self.links[0])
+        matches = re.findall(NUMBERS_RE, self.links[0])
         if matches:
             return matches[-1]
         return -1

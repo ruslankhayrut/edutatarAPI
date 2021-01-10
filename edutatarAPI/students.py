@@ -1,7 +1,7 @@
 from .abc import AbstractModel, AbstractParser
 from .validators import StudentsGet
 from marshmallow import ValidationError
-from .constants import STUDENTS_PAGE_URL
+from .constants import STUDENTS_PAGE_URL, NUMBERS_RE, NAMES_RE
 from .grades import Grades
 import re
 
@@ -36,8 +36,8 @@ class _StudentsParser(AbstractParser):
 
         students = []
         for match in matches:
-            name = re.search(r'([ЁёА-я ]+){2}', match)
-            id = re.findall(r'\d+', match)
+            name = re.search(NAMES_RE, match)
+            id = re.findall(NUMBERS_RE, match)
             if name and id:
                 students.append({
                     'grade': self.grade,
@@ -49,7 +49,6 @@ class _StudentsParser(AbstractParser):
 
     @property
     def json(self):
-
         students_list = self.__get_students_list()
         if not students_list:
             return {'message': 'Not found', 'status': 404}
